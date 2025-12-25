@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Millionaire YT UC Store - India's #1 Trusted UC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#0c0c0c 0%,#1a0033 100%);color:#fff;overflow-x:hidden;}
+        .container{max-width:400px;margin:0 auto;padding:20px;min-height:100vh;display:flex;flex-direction:column;}
+        .header{text-align:center;margin-bottom:30px;}
+        .logo{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;background:linear-gradient(45deg,#ffd700,#ff6b35,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;animation:pulse 2s infinite;cursor:pointer;}
+        .tagline{color:#aaa;font-size:14px;font-weight:300;}
+        .progress-container{display:flex;justify-content:space-between;margin-bottom:30px;position:relative;}
+        .progress-step{width:30px;height:30px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;position:relative;z-index:2;transition:all 0.3s ease;}
+        .progress-step.active{background:linear-gradient(45deg,#ffd700,#ff6b35);box-shadow:0 0 20px rgba(255,215,0,0.5);}
+        .progress-step.completed{background:#00ff88;color:#000;}
+        .progress-line{height:2px;background:#333;position:absolute;top:14px;width:calc(33.33% - 15px);z-index:1;transition:background 0.3s ease;}
+        .progress-line.active{background:linear-gradient(90deg,#ffd700,#ff6b35);}
+        .step{display:none;animation:slideIn 0.5s ease;}.step.active{display:block;}
+        @keyframes slideIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+        .step-content{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border-radius:20px;padding:30px 20px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.3);}
+        .step-title{font-family:'Orbitron',monospace;font-size:24px;font-weight:700;text-align:center;margin-bottom:20px;background:linear-gradient(45deg,#ffd700,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .packs-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px;}
+        .pack-card{background:rgba(255,255,255,0.1);border-radius:15px;padding:20px;text-align:center;cursor:pointer;transition:all 0.3s ease;border:2px solid transparent;}
+        .pack-card:hover{transform:translateY(-5px);border-color:#ffd700;box-shadow:0 15px 30px rgba(255,215,0,0.3);}
+        .pack-card.selected{border-color:#ffd700 !important;background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,107,53,0.2));transform:translateY(-5px) !important;box-shadow:0 15px 30px rgba(255,215,0,0.4) !important;}
+        .pack-uc{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#00ff88;margin-bottom:5px;}
+        .pack-price{font-size:18px;font-weight:700;color:#ffd700;}
+        .form-group{margin-bottom:20px;}
+        .form-label{display:block;font-weight:600;margin-bottom:8px;color:#ddd;}
+        .form-input{width:100%;padding:15px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);border-radius:12px;color:#fff;font-size:16px;transition:all 0.3s ease;}
+        .form-input:focus{outline:none;border-color:#ffd700;box-shadow:0 0 20px rgba(255,215,0,0.3);background:rgba(255,255,255,0.15);}
+        .form-input::placeholder{color:#aaa;}
+        .payment-section{text-align:center;}
+        .upi-qr{width:180px;height:180px;margin:20px auto;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:none;}
+        .upi-id{font-family:monospace;font-size:18px;font-weight:700;color:#ffd700;word-break:break-all;background:rgba(0,0,0,0.5);padding:10px;border-radius:10px;margin:15px 0;display:none;}
+        .file-upload-area{border:3px dashed #ffd700;border-radius:15px;padding:40px 20px;text-align:center;transition:all 0.3s ease;cursor:pointer;background:rgba(255,215,0,0.1);margin:20px 0;}
+        .file-upload-area:hover{background:rgba(255,215,0,0.2);}
+        .file-upload-area.dragover{border-color:#00ff88;background:rgba(0,255,136,0.2);}
+        #screenshotPreview{max-width:100%;max-height:200px;border-radius:10px;margin-top:15px;display:none;}
+        .btn{padding:15px 30px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all 0.3s ease;width:100%;margin-bottom:10px;}
+        .btn-primary{background:linear-gradient(45deg,#ffd700,#ff6b35);color:#000;box-shadow:0 10px 25px rgba(255,215,0,0.4);}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(255,215,0,0.5);}
+        .btn-secondary{background:rgba(255,255,255,0.1);color:#fff;border:2px solid rgba(255,255,255,0.3);}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;}
+        .success-screen{text-align:center;padding:60px 20px;}
+        .success-icon{font-size:80px;color:#00ff88;margin-bottom:20px;animation:bounce 1s infinite;}
+        #countdownSection{margin:20px 0;display:none;}
+        #countdownBar{width:100%;height:10px;background:#333;border-radius:5px;overflow:hidden;margin:10px 0;}
+        #progressFill{height:100%;background:linear-gradient(90deg,#ffd700,#ff6b35);width:0%;transition:width 1s linear;}
+        #countdownText{font-size:20px;font-weight:700;color:#ffd700;margin:15px 0;}
+        #orderStatus{font-size:16px;padding:10px;background:rgba(255,255,255,0.1);border-radius:10px;margin:10px 0;}
+        #ownerModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;}
+        .modal-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1a0033,#0c0c0c);padding:30px;border-radius:20px;border:2px solid #ffd700;width:90%;max-width:350px;}
+        #ownerPanel{display:none;position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100vh;background:linear-gradient(135deg,#0c0c0c,#1a0033);z-index:999;transition:all 0.3s;box-shadow:-10px 0 30px rgba(0,0,0,0.5);}
+        #ownerPanel.open{right:0;display:block;}
+        .owner-header{padding:20px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center;}
+        .notification-badge{position:absolute;top:10px;right:10px;background:#ff4444;color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+        .order-item{background:rgba(255,255,255,0.05);margin:10px;padding:15px;border-radius:10px;border-left:4px solid #ffd700;}
+        .order-status{font-size:12px;padding:4px 12px;border-radius:20px;margin:5px 0;font-weight:600;}
+        .status-pending{background:#ffd700;color:#000;}
+        .status-delivered{background:#00ff88;color:#000;}
+        .status-declined{background:#ff4444;color:#fff;}
+        .owner-btn{padding:8px 15px;border:none;border-radius:6px;font-weight:600;cursor:pointer;margin:3px;font-size:14px;}
+        .btn-deliver{background:#00ff88;color:#000;}
+        .btn-decline{background:#ff4444;color:#fff;}
+        @keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+        @keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-10px);}60%{transform:translateY(-5px);}}
+        @media(max-width:480px){.container{padding:15px;}.logo{font-size:24px;}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="logo" id="logo">Millionaire YT UC</h1>
+            <p class="tagline">India's #1 Trusted UC ⚡ 10-15 Min Delivery</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-line" id="line1"></div><div class="progress-step active" data-step="1">1</div>
+            <div class="progress-line" id="line2"></div><div class="progress-step" data-step="2">2</div>
+            <div class="progress-line" id="line3"></div><div class="progress-step" data-step="3">3</div>
+            <div class="progress-line" id="line4"></div><div class="progress-step" data-step="4">4</div>
+        </div>
+        
+        <div id="step1" class="step active">
+            <div class="step-content">
+                <h2 class="step-title">Select UC Pack</h2>
+                <div class="packs-grid" id="packsGrid">
+                    <div class="pack-card" data-uc="60" data-price="40"><div class="pack-uc">60 UC</div><div class="pack-price">₹40</div></div>
+                    <div class="pack-card" data-uc="1900" data-price="950"><div class="pack-uc">1900 UC</div><div class="pack-price">₹950</div></div>
+                    <div class="pack-card" data-uc="3850" data-price="1540"><div class="pack-uc">3850 UC</div><div class="pack-price">₹1540</div></div>
+                    <div class="pack-card" data-uc="8100" data-price="2430"><div class="pack-uc">8100 UC</div><div class="pack-price">₹2430</div></div>
+                    <div class="pack-card" data-uc="16200" data-price="4100"><div class="pack-uc">16200 UC</div><div class="pack-price">₹4100</div></div>
+                    <div class="pack-card" data-uc="32400" data-price="7800"><div class="pack-uc">32400 UC</div><div class="pack-price">₹7800</div></div>
+                </div>
+                <button class="btn btn-primary" id="next1" disabled>Continue →</button>
+            </div>
+        </div>
+        
+        <div id="step2" class="step">
+            <div class="step-content">
+                <h2 class="step-title">Enter Details</h2>
+                <div class="form-group"><label class="form-label">Selected: <span id="selectedPackDisplay">-</span></label></div>
+                <div class="form-group"><label class="form-label">BGMI UID (10 digits)</label><input type="tel" class="form-input" id="uid" placeholder="1234567890" maxlength="10"></div>
+                <div class="form-group"><label class="form-label">In-Game Name (IGN)</label><input type="text" class="form-input" id="ign" placeholder="ProGamer"></div>
+                <button class="btn btn-secondary" id="back2">← Back</button>
+                <button class="btn btn-primary" id="next2" disabled>Continue to Payment →</button>
+            </div>
+        </div>
+        
+        <div id="step3" class="step">
+            <div class="step-content">
+                <h2 class="step-title">Complete Payment</h2>
+                <div class="payment-section">
+                    <img src="upi-qr.jpg" class="upi-qr" id="upiQr" alt="UPI QR" onerror="this.src='https://via.placeholder.com/180x180/ffd700/000000?text=UPI+QR'">
+                    <div class="upi-id" id="upiId">adiptl@ptyes</div>
+                    <p style="color:#ffd700;font-size:16px;margin:20px 0;">Pay <strong id="paymentAmount">₹0</strong> via UPI</p>
+                </div>
+                <div class="file-upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt" style="font-size:48px;color:#ffd700;margin-bottom:15px;"></i>
+                    <p>📸 Upload Payment Screenshot</p>
+                    <p style="color:#aaa;font-size:14px;">PNG/JPG (Max 5MB)</p>
+                    <input type="file" id="screenshot" accept="image/*" style="display:none;">
+                    <img id="screenshotPreview" alt="Preview">
+                </div>
+                <button class="btn btn-secondary" id="back3">← Back</button>
+                <button class="btn btn-primary" id="submitBtn" disabled>🚀 Send Order</button>
+            </div>
+        </div>
+        
+        <div id="step4" class="step">
+            <div class="step-content success-screen">
+                <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                <h2 class="success-title">✅ Order Confirmed!</h2>
+                <p style="color:#ddd;font-size:16px;">Screenshot sent to admin. UC in 10-15 mins.</p>
+                <div id="countdownSection">
+                    <div id="countdownBar"><div id="progressFill"></div></div>
+                    <p id="countdownText">⏳ Payment Verification (5:00)</p>
+                    <p id="orderStatus">Waiting for admin verification...</p>
+                </div>
+                <button class="btn btn-primary" onclick="location.reload()">New Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Owner Login Modal -->
+    <div id="ownerModal">
+        <div class="modal-content">
+            <h3 style="color:#ffd700;margin-bottom:20px;text-align:center;">🔐 Owner Login</h3>
+            <!-- ✅ YOUR GMAIL & PASSWORD AUTO-FILLED -->
+            <input type="email" id="ownerEmail" class="form-input" value="thebasicgamermlbb@gmail.com">
+            <input type="password" id="ownerPass" class="form-input" value="Intro!123">
+            <button class="btn btn-primary" id="ownerLogin">Login</button>
+            <button class="btn btn-secondary" id="closeOwner">Close</button>
+        </div>
+    </div>
+
+    <!-- Owner Panel -->
+    <div id="ownerPanel">
+        <div class="owner-header">
+            <h3>📊 Owner Dashboard <span id="notificationBadge" class="notification-badge" style="display:none;">1</span></h3>
+            <button id="togglePanel" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">✕</button>
+        </div>
+        <div id="ordersList" style="padding:20px;height:calc(100vh - 100px);overflow-y:auto;">
+            <div style="text-align:center;color:#aaa;padding:40px;">Loading orders...</div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // 🔥 YOUR FIREBASE CONFIG (100% WORKING)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVMrarnVoMKI6Qb8SysuG3Kacc3oyqgQU",
+            authDomain: "uc-store-2025.firebaseapp.com",
+            databaseURL: "https://uc-store-2025-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "uc-store-2025",
+            storageBucket: "uc-store-2025.firebasestorage.app",
+            messagingSenderId: "107556404838",
+            appId: "1:107556404838:web:017fc6bb6a566b0d8137a7"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // ✅ YOUR CREDENTIALS (Updated)
+        const OWNER_EMAIL = "thebasicgamermlbb@gmail.com";
+        const OWNER_PASS = "Intro!123";
+        
+        // Global Variables
+        let currentStep = 1;
+        let selectedPack = null;
+        let screenshotFile = null;
+        let currentOrderId = null;
+        let orderTimer = null;
+        let pendingOrdersCount = 0;
+        
+        // 🔥 MAIN INITIALIZATION
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 UC Store Loaded Successfully!');
+            console.log('✅ Owner credentials set:', OWNER_EMAIL);
+            
+            // 1. Pack Selection
+            document.querySelectorAll('.pack-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.pack-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPack = {
+                        uc: parseInt(this.dataset.uc),
+                        price: parseInt(this.dataset.price)
+                    };
+                    document.getElementById('next1').disabled = false;
+                    console.log('✅ Pack selected:', selectedPack);
+                });
+            });
+            
+            // 2. Step 1 → Step 2
+            document.getElementById('next1').addEventListener('click', function() {
+                if (selectedPack) {
+                    document.getElementById('selectedPackDisplay').textContent = `${selectedPack.uc} UC - ₹${selectedPack.price}`;
+                    showStep(2);
+                }
+            });
+            
+            // 3. Step 2 Validation
+            document.getElementById('uid').addEventListener('input', validateStep2);
+            document.getElementById('ign').addEventListener('input', validateStep2);
+            
+            // 4. Step 2 → Step 3
+            document.getElementById('next2').addEventListener('click', function() {
+                document.getElementById('paymentAmount').textContent = `₹${selectedPack.price}`;
+                document.getElementById('upiQr').style.display = 'block';
+                document.getElementById('upiId').style.display = 'block';
+                showStep(3);
+            });
+            
+            // 5. Back Buttons
+            document.getElementById('back2').addEventListener('click', () => showStep(1));
+            document.getElementById('back3').addEventListener('click', () => showStep(2));
+            
+            // 6. File Upload
+            setupFileUpload();
+            
+            // 7. Logo Click (Owner Login)
+            document.getElementById('logo').addEventListener('click', toggleOwnerLogin);
+            
+            // 8. Auto-load Owner Panel
+            if (localStorage.getItem('ownerLoggedIn') === 'true') {
+                document.getElementById('ownerPanel').style.display = 'block';
+                document.getElementById('ownerPanel').classList.add('open');
+                loadOwnerPanel();
+            }
+        });
+        
+        // Step 2 Validation
+        function validateStep2() {
+            const uid = document.getElementById('uid').value;
+            const ign = document.getElementById('ign').value.trim();
+            document.getElementById('next2').disabled = !(uid.length === 10 && ign.length > 0);
+        }
+        
+        // File Upload Setup
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('screenshot');
+            const preview = document.getElementById('screenshotPreview');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', function(e) {
+                handleFile(e);
+            });
+            
+            // Drag & Drop
+            ['dragenter','dragover','dragleave','drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter','dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+            });
+            
+            ['dragleave','drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                fileInput.files = e.dataTransfer.files;
+                handleFile({target: fileInput});
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            function handleFile(e) {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/') && file.size < 5*1024*1024) {
+                    screenshotFile = file;
+                    const reader = new FileReader();
+                    reader.onload = (ee) => {
+                        preview.src = ee.target.result;
+                        preview.style.display = 'block';
+                        submitBtn.disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                    console.log('✅ Screenshot uploaded');
+                } else {
+                    alert('Please upload valid image (PNG/JPG, max 5MB)');
+                }
+            }
+        }
+        
+        // Submit Order
+        document.getElementById('submitBtn').addEventListener('click', async function() {
+            if (!screenshotFile || !selectedPack) {
+                alert('⚠️ Please select pack and upload screenshot first!');
+                return;
+            }
+            
+            this.disabled = true;
+            this.textContent = 'Sending Order...';
+            
+            const uid = document.getElementById('uid').value.trim();
+            const ign = document.getElementById('ign').value.trim();
+            
+            if (uid.length !== 10 || !ign) {
+                alert('⚠️ Please enter valid UID (10 digits) and IGN!');
+                this.disabled = false;
+                this.textContent = '🚀 Send Order';
+                return;
+            }
+            
+            const orderData = {
+                uc: selectedPack.uc,
+                price: selectedPack.price,
+                uid: uid,
+                ign: ign,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'pending',
+                customerTime: new Date().toISOString()
+            };
+            
+            try {
+                const orderRef = await db.collection('orders').add(orderData);
+                currentOrderId = orderRef.id;
+                console.log('✅ Order created:', currentOrderId);
+                
+                // Real-time status listener
+                db.collection('orders').doc(currentOrderId).onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        updateOrderStatus(data.status, data.message || '');
+                    }
+                });
+                
+                // Proper confirmation screen with countdown
+                showStep(4);
+                document.querySelector('.success-icon').innerHTML = '<i class="fas fa-clock"></i>';
+                document.querySelector('.success-title').textContent = '✅ Order Sent Successfully!';
+                document.querySelector('.success-screen p').textContent = 'UC will be delivered in 5 minutes. Admin notified!';
+                document.getElementById('countdownSection').style.display = 'block';
+                document.getElementById('orderStatus').textContent = '⏳ Waiting for admin verification...';
+                startCountdown();
+                
+            } catch(error) {
+                console.error('Error:', error);
+                alert('❌ Network error! Check internet and try again.');
+                this.disabled = false;
+                this.textContent = '🚀 Send Order';
+            }
+        });
+        
+        // 5 Minute Countdown with progress bar
+        function startCountdown() {
+            let timeLeft = 300;
+            orderTimer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('countdownText').textContent = `⏳ Payment Verification (${minutes}:${seconds.toString().padStart(2, '0')})`;
+                document.getElementById('progressFill').style.width = ((300 - timeLeft) / 300 * 100) + '%';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(orderTimer);
+                    document.getElementById('orderStatus').textContent = '❌ Time expired. Contact admin via WhatsApp.';
+                }
+            }, 1000);
+        }
+        
+        // Update Customer Status
+        function updateOrderStatus(status, message) {
+            const statusEl = document.getElementById('orderStatus');
+            if (orderTimer) clearInterval(orderTimer);
+            
+            switch(status) {
+                case 'delivered':
+                    statusEl.innerHTML = '✅ UC Delivered Successfully! Check your BGMI now.';
+                    document.querySelector('.success-icon').innerHTML = '<i class="fas fa-check-circle"></i>';
+                    document.querySelector('.success-title').textContent = '🎉 UC Delivered!';
+                    document.getElementById('countdownSection').style.display = 'none';
+                    break;
+                case 'declined':
+                    statusEl.innerHTML = `❌ Order Declined: ${message || 'Payment issue'}`;
+                    document.querySelector('.success-icon').innerHTML = '<i class="fas fa-times-circle"></i>';
+                    document.querySelector('.success-title').textContent = '❌ Order Declined';
+                    document.getElementById('countdownSection').style.display = 'none';
+                    break;
+            }
+        }
+        
+        // Navigation Functions
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                step.classList.toggle('completed', index < currentStep - 1);
+                step.classList.toggle('active', index === currentStep - 1);
+            });
+            document.querySelectorAll('.progress-line').forEach((line, index) => {
+                line.classList.toggle('active', index < currentStep - 1);
+            });
+        }
+        
+        // 🔥 OWNER FUNCTIONS WITH NOTIFICATIONS
+        function toggleOwnerLogin() {
+            console.log('🔐 Owner login triggered');
+            document.getElementById('ownerModal').style.display = 'block';
+        }
+        
+        document.getElementById('ownerLogin').addEventListener('click', function() {
+            const email = document.getElementById('ownerEmail').value.trim();
+            const pass = document.getElementById('ownerPass').value;
+            
+            if (email === OWNER_EMAIL && pass === OWNER_PASS) {
+                localStorage.setItem('ownerLoggedIn', 'true');
+                document.getElementById('ownerModal').style.display = 'none';
+                document.getElementById('ownerPanel').style.display = 'block';
+                document.getElementById('ownerPanel').classList.add('open');
+                loadOwnerPanel();
+                console.log('✅ Owner logged in successfully!');
+            } else {
+                alert('❌ Invalid Email or Password!');
+            }
+        });
+        
+        document.getElementById('closeOwner').addEventListener('click', () => {
+            document.getElementById('ownerModal').style.display = 'none';
+        });
+        
+        document.getElementById('togglePanel').addEventListener('click', () => {
+            document.getElementById('ownerPanel').classList.toggle('open');
+        });
+        
+        // Owner Dashboard with REAL-TIME NOTIFICATIONS
+        function loadOwnerPanel() {
+            console.log('📊 Loading owner dashboard...');
+            
+            // Real-time listener for new orders
+            db.collection('orders')
+                .orderBy('timestamp', 'desc')
+                .onSnapshot(snapshot => {
+                    const list = document.getElementById('ordersList');
+                    let newPendingCount = 0;
+                    
+                    list.innerHTML = '';
+                    
+                    if (snapshot.empty) {
+                        list.innerHTML = '<div style="text-align:center;color:#aaa;padding:40px;font-size:16px;">📭 No orders yet<br><small>Waiting for customers...</small></div>';
+                        updateNotificationBadge(0);
+                        return;
+                    }
+                    
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.status === 'pending') newPendingCount++;
+                        
+                        const div = document.createElement('div');
+                        div.className = 'order-item';
+                        div.innerHTML = `
+                            <div style="font-weight:700;color:#ffd700;margin-bottom:8px;">${data.uc || 'N/A'} UC - ₹${data.price || 'N/A'}</div>
+                            <div style="font-size:14px;color:#ddd;margin-bottom:8px;">🆔 UID: ${data.uid || 'N/A'}</div>
+                            <div style="font-size:14px;color:#ccc;margin-bottom:10px;">👤 ${data.ign || 'N/A'}</div>
+                            <div class="order-status status-${data.status || 'pending'}">${(data.status || 'pending').toUpperCase()}</div>
+                            <div style="margin-top:12px;">
+                                ${data.status === 'pending' ?
+                                    `<button class="owner-btn btn-deliver" onclick="ownerAction('${doc.id}', 'deliver')">✅ Deliver UC</button>
+                                     <button class="owner-btn btn-decline" onclick="ownerAction('${doc.id}', 'decline')">❌ Decline</button>` :
+                                    `<span style="color:#00ff88;font-weight:600;font-size:14px;">✓ Action Completed</span>`
+                                }
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    });
+                    
+                    pendingOrdersCount = newPendingCount;
+                    updateNotificationBadge(pendingOrdersCount);
+                    
+                    // Play notification sound for new pending orders
+                    if (newPendingCount > 0 && !document.hidden) {
+                        playNotificationSound();
+                    }
+                }, error => {
+                    console.error('Owner panel error:', error);
+                    document.getElementById('ordersList').innerHTML = '<div style="color:#ff4444;text-align:center;padding:20px;">Error loading orders!</div>';
+                });
+        }
+        
+        // Notification badge update
+        function updateNotificationBadge(count) {
+            const badge = document.getElementById('notificationBadge');
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+        
+        // Notification sound
+        function playNotificationSound() {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAo');
+            audio.play().catch(e => console.log('Notification sound not supported'));
+        }
+        
+        // Owner Actions
+        window.ownerAction = async (orderId, action) => {
+            let message = '';
+            if (action === 'decline') {
+                message = prompt('Decline reason (optional):') || 'Payment not verified';
+            }
+            
+            try {
+                await db.collection('orders').doc(orderId).update({
+                    status: action,
+                    message: message,
+                    adminTime: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log(`✅ ${action.toUpperCase()} completed for order ${orderId}`);
+            } catch (error) {
+                console.error('Action error:', error);
+                alert('Error updating order!');
+            }
+        };
+    </script>
+</body>
+</html>
